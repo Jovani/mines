@@ -117,5 +117,11 @@ class MinesweeperGame(models.Model):
         self.room.save()
 
     def reveal_all_bombs(self):
-        # TODO
-        pass
+        game_state = self.game_state
+
+        for row in game_state:
+            gen = (square for square in row if square['value'] == -1)
+            for square in gen:
+                square['flipped'] = True
+
+        self.game_state = game_state
