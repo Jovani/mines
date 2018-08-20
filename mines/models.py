@@ -2,24 +2,17 @@ import json
 from django.db import models
 
 
-ROOM_OPEN = 'open'
-ROOM_CLOSED = 'closed'
-
-ROOM_STATE_CHOICES = (
-    (ROOM_OPEN, 'Open'),
-    (ROOM_CLOSED, 'Closed'),
-)
-
-DIFFICULTY_CHOICES = (
-    ('easy', 'Easy'),
-    ('medium', 'Medium'),
-    ('hard', 'Hard'),
-)
-
-
 class GameRoom(models.Model):
+    ROOM_OPEN = 'open'
+    ROOM_CLOSED = 'closed'
+
+    ROOM_STATE_CHOICES = (
+        (ROOM_OPEN, 'Open'),
+        (ROOM_CLOSED, 'Closed'),
+    )
+
     name = models.CharField(max_length=100)
-    state = models.CharField(choices=ROOM_STATE_CHOICES, max_length=6)
+    state = models.CharField(choices=ROOM_STATE_CHOICES, default=ROOM_OPEN, max_length=6)
     game = models.OneToOneField(
         'MinesweeperGame',
         on_delete=models.CASCADE,
@@ -32,17 +25,40 @@ class GameRoom(models.Model):
     def open_room(cls, name, grid_size, game_difficulty):
         game = MinesweeperGame.start_game(grid_size, game_difficulty)
 
-        return cls.objects.create(name=name, state=ROOM_OPEN, game=game)
+        return cls.objects.create(name=name, game=game)
 
     def close_room(self):
-        self.state = ROOM_CLOSED
+        self.state = self.ROOM_CLOSED
         self.save()
 
 
 class MinesweeperGame(models.Model):
+    EASY = 'easy'
+    MEDIUM = 'medium'
+    HARD = 'hard'
+
+    DEFAULT_DIFFICULTY = MEDIUM
+
+    DIFFICULTY_CHOICES = (
+        (EASY, 'Easy'),
+        (MEDIUM, 'Medium'),
+        (HARD, 'Hard'),
+    )
+
+    GAME_OPEN = 'open'
+    GAME_WON = 'won'
+    GAME_LOST = 'lost'
+
+    GAME_STATE_CHOICES = (
+        (GAME_OPEN, 'Open'),
+        (GAME_WON, 'Won'),
+        (GAME_LOST, 'Lost')
+    )
+
     difficulty = models.CharField(choices=DIFFICULTY_CHOICES, max_length=6)
     _game_state = models.TextField()
     grid_size = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 31)])
+    state = models.CharField(choices=GAME_STATE_CHOICES, default=GAME_OPEN, max_length=4)
 
     @property
     def game_state(self):
@@ -62,7 +78,10 @@ class MinesweeperGame(models.Model):
             'medium': 40,
             'hard': 60
         }
-        difficulty_value = difficulty_map.get(difficulty, 40)  # Default difficulty of Medium
+        difficulty_value = difficulty_map.get(
+            difficulty,
+            difficulty_map.get(self.DEFAULT_DIFFICULTY)
+        )
 
         # Create a grid of <grid_size x grid_size> 
         game_state = build_grid(grid_size, difficulty_value)
