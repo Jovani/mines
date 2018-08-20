@@ -4,6 +4,7 @@
 
 import random
 from functools import reduce
+from mines.utils import get_search_list
 
 
 '''
@@ -43,15 +44,9 @@ def compute_square_value(base_grid, index_i, index_j, square):
     # do a shallow copy of the square, to avoid mutating
     new_square = dict(square)
 
-    search_list = [
-        (index_i - 1, index_j - 1), (index_i - 1, index_j), (index_i - 1, index_j + 1),
-        (index_i, index_j - 1), (index_i, index_j + 1),
-        (index_i + 1, index_j - 1), (index_i + 1, index_j), (index_i + 1, index_j + 1),
-    ]
-
     value = reduce(
         lambda value, pair: value + 1 if is_bomb_square(base_grid, *pair) else 0,
-        search_list,
+        get_search_list(index_i, index_j),
         0
     )
 
