@@ -92,6 +92,10 @@ class MinesweeperGame(models.Model):
 
         return game
 
+    def flip_squares_and_save(self, x, y):
+        self.flip_square(x, y, initial_flip=True)
+        self.save()
+
     def flip_square(self, x, y, initial_flip):
         '''
             Flip a square.
@@ -112,7 +116,7 @@ class MinesweeperGame(models.Model):
         # If the square is a bomb and this is the initial flip, the game ends in a loss.
         if square['value'] == -1:
             if initial_flip:
-                self.finish_game(win=False)
+                self.finish_game_and_save(win=False)
 
             return
         elif square['flipped']:
@@ -124,16 +128,14 @@ class MinesweeperGame(models.Model):
 
         chain_trigger_list = get_search_list(x, y)
         for pair in chain_trigger_list:
-            self.flip_square(*pair, False)
+            self.flip_square(*pair, initial_flip=False)
 
-        if initial_flip:
-            # Ensure we save at the end, and only once
-            self.save()
-
-    def finish_game(self, win):
+    def finish_game_and_save(self, win):
         self.reveal_all_bombs()
-        self.room.state = ROOM_CLOSED
-        self.room.save()
+        self.state = self.GAME_WON if win else self.GAME_LOST
+        self.save()
+
+        self.room.close_room()
 
     def reveal_all_bombs(self):
         game_state = self.game_state
