@@ -15,7 +15,7 @@ def build_grid(grid_size, difficulty):
     base_grid = [build_row(grid_size, difficulty) for x in range(grid_size)]
 
     # With the bombs now set, go over the grid again and determine the values of the non-bomb squares
-    filled_grid =  fill_grid(base_grid)
+    return fill_grid(base_grid)
 
 def build_row(grid_size, difficulty):
     return [build_column(grid_size, difficulty) for x in range(grid_size)]
