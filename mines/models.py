@@ -25,7 +25,11 @@ class GameRoom(models.Model):
     def open_room(cls, name, grid_size, game_difficulty):
         game = MinesweeperGame.start_game(grid_size, game_difficulty)
 
-        return cls.objects.create(name=name, game=game)
+        room = cls(name=name, game=game)
+        room.clean_fields()
+        room.save()
+
+        return room
 
     def close_room(self):
         self.state = self.ROOM_CLOSED
@@ -56,7 +60,7 @@ class MinesweeperGame(models.Model):
     )
 
     difficulty = models.CharField(choices=DIFFICULTY_CHOICES, max_length=6)
-    _game_state = models.TextField()
+    _game_state = models.TextField(blank=True)
     grid_size = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 31)])
     state = models.CharField(choices=GAME_STATE_CHOICES, default=GAME_OPEN, max_length=4)
 
@@ -78,16 +82,16 @@ class MinesweeperGame(models.Model):
             'medium': 40,
             'hard': 60
         }
-        difficulty_value = difficulty_map.get(
-            difficulty,
-            difficulty_map.get(self.DEFAULT_DIFFICULTY)
-        )
+        difficulty_value = difficulty_map[difficulty]
 
         # Create a grid of <grid_size x grid_size> 
         game_state = build_grid(grid_size, difficulty_value)
 
         # We invoke the MinesweeperGame directly in order to make use of our nifty game_state property
         game = cls(difficulty=difficulty, game_state=game_state, grid_size=grid_size)
+        
+        # Ensure that fields are clean, and save.
+        game.clean_fields()
         game.save()
 
         return game
