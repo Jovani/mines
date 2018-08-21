@@ -1,4 +1,7 @@
-.vscode/*
+.vscode/
 __pycache__/
 *.pyc
 dev_requirements.py
+
+node_modules/
+db.sqlite3
