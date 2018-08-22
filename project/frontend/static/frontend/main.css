@@ -1,0 +1,7 @@
+.room-table tr {
+    text-align: center;
+}
+
+.room-table tbody tr {
+    cursor: pointer;
+}
