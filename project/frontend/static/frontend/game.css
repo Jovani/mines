@@ -1,0 +1,54 @@
+.game-board {
+    text-align: center;
+}
+
+.square {
+    background-color: silver;
+    height: 33px;
+    width: 33px;
+    padding: 1px;
+    margin: 1px;
+    border: 1px solid white;
+    cursor: pointer;
+}
+
+.square:hover {
+    background-color: lightgray;
+}
+
+.square .square-value {
+    font-weight: bold;
+}
+
+.square .value-1 {
+    color: blue;
+}
+
+.square .value-2 {
+    color: green;
+}
+
+.square .value-3 {
+    color: red;
+}
+
+.square .value-4 {
+    color: purple;
+}
+
+.square .value-5 {
+    color: maroon;
+}
+
+.square .value-6 {
+    /* Would've used html turquoise to adhere to the standard, but it wasn't visible. */
+    color: darkcyan;
+}
+
+.square .value-7 {
+    color: black;
+}
+
+.square .value-8 {
+    color: gray;
+}
