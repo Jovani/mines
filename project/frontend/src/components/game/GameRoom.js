@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Game from './Game';
-import fetch from 'cross-fetch';
 import {Link} from 'react-router-dom'
+import PropTypes from 'prop-types';
+import fetch from 'cross-fetch';
+import Game from './Game';
 
 
 class GameRoom extends Component {
@@ -75,13 +76,17 @@ class GameRoom extends Component {
                     <h3>{this.state.data.room_name}</h3>
                 </div>
                 <Game gameId={this.props.match.params.id}
-                    gameState={JSON.parse(this.state.data.obscured_game_state)}
-                    state={this.state.data.state}
-                    onClick={this.squareClicked}
+                      gameState={JSON.parse(this.state.data.obscured_game_state)}
+                      state={this.state.data.state}
+                      onClick={this.squareClicked}
                 />
             </React.Fragment>
         )
     }
+}
+
+GameRoom.propTypes = {
+    match: PropTypes.object.isRequired
 }
 
 export default GameRoom;

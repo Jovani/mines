@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class GameAwareComponent extends Component {
     constructor(props) {
@@ -21,5 +22,9 @@ class GameAwareComponent extends Component {
         return this.props.state === 'lost';
     }
 }
+
+GameAwareComponent.propTypes = {
+    state: PropTypes.string.isRequired
+};
 
 export default GameAwareComponent;

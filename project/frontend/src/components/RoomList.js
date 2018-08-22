@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import RoomTableContainer from './RoomTableContainer';
 import CreateRoomForm from './CreateRoomForm'
 
@@ -30,6 +30,10 @@ class RoomList extends Component {
             </React.Fragment>
         )
     }
+}
+
+RoomList.propTypes = {
+    history: PropTypes.object.isRequired
 }
 
 export default RoomList;

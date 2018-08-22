@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import GameAwareComponent from './GameAwareComponent';
+import Game from './Game';
 
 const Bomb = () => <i className='fas fa-bomb'></i>
 const Peace = () => <i className='fas fa-hand-peace'></i>
@@ -48,6 +50,14 @@ class Square extends GameAwareComponent {
             {this.getValue()}
         </button>
     }
+}
+
+Square.propTypes = {
+    data: PropTypes.object.isRequired,
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    state: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired
 }
 
 export default Square;

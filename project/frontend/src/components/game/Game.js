@@ -86,4 +86,11 @@ class Game extends GameAwareComponent {
     }
 }
 
+Game.propTypes = {
+    gameId: PropTypes.string.isRequired,
+    gameState: PropTypes.array.isRequired,
+    onClick: PropTypes.func.isRequired,
+    state: PropTypes.string.isRequired
+}
+
 export default Game;
