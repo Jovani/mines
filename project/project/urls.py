@@ -14,9 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, re_path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/mines/', include('mines.urls')),
+    path('', include('frontend.urls')),
+    
+    # Allow React Router to take over any URLs not registered with Django
+    path(r'^.*/', include('frontend.urls')),
 ]
