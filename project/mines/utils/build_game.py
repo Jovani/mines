@@ -41,11 +41,12 @@ def compute_square_value(base_grid, index_i, index_j, square):
     if square['value'] == -1:
         return square
 
-    # do a shallow copy of the square, to avoid mutating
+    # do a shallow copy of the square, to avoid mutating.
     new_square = dict(square)
 
+    # Compute the square's value based on the number of surrounding bombs.
     value = reduce(
-        lambda value, pair: value + 1 if is_bomb_square(base_grid, *pair) else 0,
+        lambda value, pair: value + 1 if is_bomb_square(base_grid, *pair) else value,
         get_search_list(index_i, index_j),
         0
     )
@@ -55,12 +56,12 @@ def compute_square_value(base_grid, index_i, index_j, square):
 
 def is_bomb_square(base_grid, x, y):
     if x < 0 or y < 0:
-        return
+        return False
     
     try:
         other_square = base_grid[x][y]
     except IndexError:
-        pass
+        return False
     else:
         if other_square['value'] == -1:
             return True
